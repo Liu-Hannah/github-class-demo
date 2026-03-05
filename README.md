@@ -1,2 +1,4 @@
 # github-class-demo
-to practice
+
+C语言Hello World编程
+
