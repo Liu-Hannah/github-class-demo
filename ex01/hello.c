@@ -2,6 +2,9 @@
 
 int main()
 {
-	printf("Hello World!");
+	char input[100]; 
+	printf(" ‰»Î£∫");
+	scanf("%s",input);
+	printf("%s\n",input);
 	return 0;
  } 
