@@ -6,5 +6,5 @@ int main()
 	printf("ÊäÈë£º");
 	scanf("%s",input);
 	printf("%s\n",input);
-	return 0;
+	return 0;//updata hello.c
  } 
