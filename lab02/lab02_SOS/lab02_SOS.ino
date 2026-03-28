@@ -13,14 +13,16 @@ void setup() {
 void loop() 
 {
   // S: 短闪3次
-  for(int i=0; i<3; i++) { digitalWrite(LED_PIN_R, HIGH); delay(200); digitalWrite(LED_PIN_R, LOW); delay(200); }
+  for(int i=0; i<3; i++) { digitalWrite(LED_PIN_R, HIGH);digitalWrite(LED_PIN, HIGH); delay(200); digitalWrite(LED_PIN_R, LOW);digitalWrite(LED_PIN, LOW); delay(200);
+   }
   delay(500); // 字母间隔
   // O: 长闪3次
-  for(int i=0; i<3; i++) { digitalWrite(LED_PIN_R, HIGH); delay(600); digitalWrite(LED_PIN_R, LOW); delay(200); }
+  for(int i=0; i<3; i++) { digitalWrite(LED_PIN_R, HIGH);digitalWrite(LED_PIN, HIGH);  delay(600); digitalWrite(LED_PIN_R, LOW); digitalWrite(LED_PIN, LOW); delay(200); 
+  }
   delay(500);
   // S: 短闪3次
-  for(int i=0; i<3; i++) { digitalWrite(LED_PIN_R, HIGH); delay(200); digitalWrite(LED_PIN_R, LOW); delay(200); }
+  for(int i=0; i<3; i++) { digitalWrite(LED_PIN_R, HIGH);digitalWrite(LED_PIN, HIGH); delay(200); digitalWrite(LED_PIN_R, LOW); digitalWrite(LED_PIN, LOW);delay(200);
+   }
   delay(2000); // 单词间隔
-  
 
 }
