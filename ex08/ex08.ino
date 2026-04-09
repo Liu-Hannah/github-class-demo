@@ -10,7 +10,7 @@ const int TouchPin = 4;
 WebServer server(80);
 
 bool isArm = false;    // 布防
-bool isAlarm = false;  // 报警锁
+bool isAlarm = false;  // 报警
 
 // 网页
 const char* html = R"HTML(
