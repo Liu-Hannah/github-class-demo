@@ -1,85 +1,58 @@
 #include <WiFi.h>
 #include <WebServer.h>
 
-// 配置区（建议用英文WiFi名！）
-const char* ssid = "我要和你豹了";
+const char* ssid = "HANNAH";
 const char* password = "liuzihan2006";
 
-const int LED_PIN = 2;
-const int TOUCH_PIN = 14;
+const int LED = 2;
+const int TouchPin = 4;
 
 WebServer server(80);
-bool isArmed = false;
-bool isAlarming = false;
 
-// 网页代码（UTF-8解决乱码）
-const char* htmlPage = R"HTML(
+bool isArm = false;    // 布防
+bool isAlarm = false;  // 报警锁
+
+// 网页
+const char* html = R"HTML(
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <title>安防报警器</title>
-    <style>
-        body { text-align: center; margin-top: 50px; }
-        .btn { padding: 15px 30px; margin: 10px; font-size: 18px; text-decoration: none; color: white; border-radius: 5px; }
-        .arm { background: #f44336; } .disarm { background: #4CAF50; }
-    </style>
-</head>
-<body>
-    <h1>物联网安防报警器</h1>
-    <a href=" " class="btn arm">布防(Arm)</a >
-    <a href="/disarm" class="btn disarm">撤防(Disarm)</a >
-</body>
-</html>
+<meta charset="UTF-8">
+<h1>安防报警</h1>
+<p><a href=" ">布防</a ></p >
+<p><a href="/disarm">撤防</a ></p >
 )HTML";
 
-void handleRoot() { server.send(200, "text/html; charset=UTF-8", htmlPage); }
-void handleArm() { isArmed = true; isAlarming = false; server.send(200, "text/html; charset=UTF-8", "<h3>已布防</h3><a href='/'>返回</a >"); }
-void handleDisarm() { isArmed = false; isAlarming = false; digitalWrite(LED_PIN, LOW); server.send(200, "text/html; charset=UTF-8", "<h3>已撤防</h3><a href='/'>返回</a >"); }
+void handleRoot() { server.send(200, "text/html; charset=utf-8", html); }
+void handleArm()  { isArm = true;  isAlarm = false; server.send(200,"text/html","已布防 <a href='/'>返回</a >"); }
+void handleDisarm(){isArm = false; isAlarm = false; digitalWrite(LED,LOW);server.send(200,"text/html","已撤防 <a href='/'>返回</a >");}
 
 void setup() {
-    Serial.begin(115200);
-    pinMode(LED_PIN, OUTPUT);
-    pinMode(TOUCH_PIN, INPUT);
-    digitalWrite(LED_PIN, LOW);
+  Serial.begin(115200);
+  pinMode(LED, OUTPUT);
+  pinMode(TouchPin, INPUT_PULLUP); 
 
-    // 【增强版WiFi连接】增加超时+重试
-    WiFi.begin(ssid, password);
-    int retryCount = 0;
-    while (WiFi.status() != WL_CONNECTED && retryCount < 20) { // 最多重试20次（10秒）
-        delay(500);
-        Serial.print(".");
-        retryCount++;
-    }
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) { delay(500); Serial.print("."); }
+  Serial.println("\nIP:"); Serial.println(WiFi.localIP());
 
-    if (WiFi.status() == WL_CONNECTED) {
-        Serial.println("\n✅ WiFi连接成功！IP: " + WiFi.localIP().toString());
-        server.on("/", handleRoot);
-        server.on("/arm", handleArm);
-        server.on("/disarm", handleDisarm);
-        server.begin();
-        Serial.println("✅ Web服务器启动");
-    } else {
-        Serial.println("\n❌ WiFi连接失败！请检查WiFi名/密码/频段");
-        // 连接失败时，LED闪烁提示
-        while(1) {
-            digitalWrite(LED_PIN, HIGH); delay(200);
-            digitalWrite(LED_PIN, LOW); delay(200);
-        }
-    }
+  server.on("/", handleRoot);
+  server.on("/arm", handleArm);
+  server.on("/disarm", handleDisarm);
+  server.begin();
 }
 
 void loop() {
-    server.handleClient();
+  server.handleClient();
 
-    if (isArmed && digitalRead(TOUCH_PIN) == HIGH && !isAlarming) {
-        isAlarming = true;
-    }
+  if (isArm && digitalRead(TouchPin) == LOW) {
+    isAlarm = true;
+  }
 
-    if (isAlarming) {
-        digitalWrite(LED_PIN, HIGH); delay(100);
-        digitalWrite(LED_PIN, LOW); delay(100);
-    } else {
-        digitalWrite(LED_PIN, LOW);
-    }
+  if (isAlarm) {
+    digitalWrite(LED, HIGH);
+    delay(100);
+    digitalWrite(LED, LOW);
+    delay(100);
+  } else {
+    digitalWrite(LED, LOW);
+  }
 }
