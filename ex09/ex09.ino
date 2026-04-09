@@ -72,7 +72,6 @@ void setup() {
     pinMode(ledPin, OUTPUT);
     digitalWrite(ledPin, LOW);
 
-    // 连接WiFi
     WiFi.begin(ssid, password);
     Serial.print("正在连接WiFi");
     while (WiFi.status() != WL_CONNECTED) {
@@ -83,7 +82,6 @@ void setup() {
     Serial.print("ESP32 IP地址: ");
     Serial.println(WiFi.localIP());
 
-    // 注册路由
     server.on("/", handleRoot);
     server.on("/sensor", handleSensor);
 
